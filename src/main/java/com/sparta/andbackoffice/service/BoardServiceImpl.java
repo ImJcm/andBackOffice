@@ -11,10 +11,10 @@ import com.sparta.andbackoffice.dto.request.BoardRequestDto;
 import com.sparta.andbackoffice.dto.response.ApiResponseDto;
 import com.sparta.andbackoffice.dto.response.BoardResponseDto;
 import com.sparta.andbackoffice.entity.Board;
-import com.sparta.andbackoffice.entity.MiddleCategory;
+import com.sparta.andbackoffice.entity.BoardCategory;
+import com.sparta.andbackoffice.repository.BoardCategoryRepository;
 import com.sparta.andbackoffice.repository.BoardRepository;
 import com.sparta.andbackoffice.repository.CategoryRepository;
-import com.sparta.andbackoffice.repository.MiddleCategoryRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,13 @@ public class BoardServiceImpl implements BoardService {
 
 	private final BoardRepository boardRepository;
 	private final CategoryRepository categoryRepository;
-	private final MiddleCategoryRepository middleCategoryRepository;
+	private final BoardCategoryRepository boardCategoryRepository;
+
+	@Override
+	public BoardResponseDto getBoard(Long boardId) {
+		Board board = findBoard(boardId);
+		return new BoardResponseDto(board);
+	}
 
 	@Override
 	public List<BoardResponseDto> getAllBoards() {
@@ -35,11 +41,11 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public BoardResponseDto createBoard(MiddleCategory categoryId, BoardRequestDto requestDto) {
+	public BoardResponseDto createBoard(BoardRequestDto requestDto) {
 		log.info("Service - createBoard : 시작");
 
-		findCategory(categoryId);
-		Board board = boardRepository.save(new Board(categoryId, requestDto));
+		findCategory(requestDto.getCategoryId());
+		Board board = boardRepository.save(new Board(requestDto));
 
 		log.info("Service - createBoard : 끝");
 		return new BoardResponseDto(board);
@@ -51,7 +57,7 @@ public class BoardServiceImpl implements BoardService {
 	public BoardResponseDto modifyBoard(Long id, BoardRequestDto requestDto) {
 		log.info("Service - modifyBoard : 시작");
 
-		Board board = findById(id);
+		Board board = findBoard(id);
 		board.setTitle(requestDto.getTitle());
 		board.setContents(requestDto.getContents());
 
@@ -59,18 +65,12 @@ public class BoardServiceImpl implements BoardService {
 		return new BoardResponseDto(board);
 	}
 
-	private Board findById(Long id) {
-		return boardRepository.findById(id).orElseThrow(
-				() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다.")
-		);
-	}
-
 	@Override
 	@Transactional
 	public ApiResponseDto deleteBoard(Long id) {
 		log.info("Service - deleteBoard : 시작");
 
-		Board board = findById(id);
+		Board board = findBoard(id);
 		boardRepository.delete(board);
 
 		log.info("Service - deleteBoard : 끝");
@@ -78,12 +78,11 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public void findCategory(MiddleCategory categoryId) {
-		middleCategoryRepository.findById(categoryId.getMiddleCategoryId()).orElseThrow(
+	public void findCategory(Long categoryId) {
+		boardCategoryRepository.findById(categoryId).orElseThrow(
 				() -> new IllegalArgumentException("존재하지 않는 카테고리입니다.")
 		);
 	}
-
 
 	@Override
 	public Board findBoard(Long boardId) {
@@ -92,10 +91,10 @@ public class BoardServiceImpl implements BoardService {
 		);
 	}
 
-
 	@Override
-	public void equalsCategory(MiddleCategory categoryId, Board board) {
-		if (!(board.getCategoryId().equals(categoryId))) {
+	public void equalsCategory(Long categoryId, Board board) {
+		BoardCategory boardCategory = boardCategoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("해당 게시글 카테고리가 존재하지 않습니다."));
+		if (!(board.getCategory().equals(boardCategory))) {
 			throw new IllegalArgumentException("카테고리가 일치하는지 다시 확인해주세요.");
 		}
 	}

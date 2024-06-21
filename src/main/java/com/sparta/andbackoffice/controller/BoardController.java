@@ -3,8 +3,6 @@ package com.sparta.andbackoffice.controller;
 import com.sparta.andbackoffice.dto.request.BoardRequestDto;
 import com.sparta.andbackoffice.dto.response.ApiResponseDto;
 import com.sparta.andbackoffice.dto.response.BoardResponseDto;
-import com.sparta.andbackoffice.entity.Category;
-import com.sparta.andbackoffice.entity.MiddleCategory;
 import com.sparta.andbackoffice.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,18 +21,17 @@ public class BoardController {
     private final BoardService boardService;
 
     // 글 작성
-    @PostMapping("/{categoryId}")
-    public ResponseEntity<?> createBoard(@PathVariable MiddleCategory categoryId,
-                                         @RequestBody BoardRequestDto requestDto) {
+    @PostMapping("")
+    public ResponseEntity<?> createBoard(@RequestBody BoardRequestDto requestDto) {
         log.info("Controller - createBoard : 시작");
 
-        BoardResponseDto result = boardService.createBoard(categoryId, requestDto);
+        BoardResponseDto result = boardService.createBoard(requestDto);
 
         log.info("Controller - createBoard : 끝");
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    //글 전체조회
+    // 글 전체조회
     @GetMapping("/getAll")
     public ResponseEntity<List<BoardResponseDto>> getAllBoards() {
         List<BoardResponseDto> boards = boardService.getAllBoards();
