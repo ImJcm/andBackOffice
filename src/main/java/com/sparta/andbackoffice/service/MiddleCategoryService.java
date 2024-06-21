@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class MiddleCategoryService {
+	//3deps 카테고리 (제일 상단 메뉴 외 중간 카테고리)
 	private final MiddleCategoryRepository middleCategoryRepository;
 
 	//조회
@@ -49,6 +50,7 @@ public class MiddleCategoryService {
 		return "카테고리 삭제완료";
 	}
 
+	//ID로 중간 카테고리 조회
 	private MiddleCategory findById(Long id) {
 		return middleCategoryRepository.findById(id).orElseThrow(
 				() -> new IllegalArgumentException("해당 카테고리를 찾을 수 없습니다.")
