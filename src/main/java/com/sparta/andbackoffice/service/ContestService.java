@@ -18,6 +18,7 @@ public class ContestService {
 
 	private final ContestRepository contestRepository;
 
+	//공모전 생성
 	public ContestResponseDto createContest(ContestRequestDto requestDto) {
 		log.info("Service - createContest : 시작");
 
@@ -27,6 +28,7 @@ public class ContestService {
 		return new ContestResponseDto(contest);
 	}
 
+	//공모전 단건 조회
 	public ContestResponseDto getContest(Long contestId) {
 		log.info("Service - getContest : 시작");
 
@@ -36,6 +38,7 @@ public class ContestService {
 		return new ContestResponseDto(contest);
 	}
 
+	//공모전 수정
 	@Transactional
 	public ContestResponseDto modifyContest(Long contestId, ContestRequestDto requestDto) {
 		log.info("Service - modifyContest : 시작");
@@ -55,6 +58,7 @@ public class ContestService {
 		return new ContestResponseDto(contest);
 	}
 
+	//공모전 삭제
 	@Transactional
 	public ApiResponseDto deleteContest(Long contestId) {
 		log.info("Service - deleteContest : 시작");
@@ -66,6 +70,7 @@ public class ContestService {
 		return new ApiResponseDto("게시글 삭제 완료", HttpStatus.OK.value());
 	}
 
+	//ID로 공모전 조회
 	public Contest findContest(Long contestId) {
 		return contestRepository.findById(contestId).orElseThrow(
 				() -> new IllegalArgumentException("존재하지 않는 글입니다.")
