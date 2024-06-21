@@ -26,7 +26,6 @@ public class Board extends TimeStamped {
     @Column(name = "board_id")
     private Long id;
 
-
     @Column(name = "title")
     private String title;
 
