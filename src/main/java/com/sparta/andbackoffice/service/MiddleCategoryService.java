@@ -1,10 +1,12 @@
 package com.sparta.andbackoffice.service;
 
 import com.sparta.andbackoffice.dto.request.MiddleCategoryRequestDto;
+import com.sparta.andbackoffice.dto.response.MiddleCategoryDetailsDto;
 import com.sparta.andbackoffice.dto.response.MiddleCategoryListResponseDto;
 import com.sparta.andbackoffice.dto.response.MiddleCategoryResponseDto;
 import com.sparta.andbackoffice.entity.MiddleCategory;
 import com.sparta.andbackoffice.repository.MiddleCategoryRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,13 @@ import java.util.stream.Collectors;
 public class MiddleCategoryService {
 	//3deps 카테고리 (제일 상단 메뉴 외 중간 카테고리)
 	private final MiddleCategoryRepository middleCategoryRepository;
+
+	//상세조회
+	public MiddleCategoryDetailsDto getMiddleCategoryDetails(Long id){
+		MiddleCategory middleCategory = middleCategoryRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("MiddleCategory ID를 찾을 수 없습니다."+id));
+		return new MiddleCategoryDetailsDto(middleCategory);
+	}
 
 	//조회
 	public MiddleCategoryListResponseDto getMiddleCategory() {
@@ -57,5 +66,4 @@ public class MiddleCategoryService {
 		);
 	}
 }
-
 

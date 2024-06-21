@@ -4,6 +4,10 @@ import com.sparta.andbackoffice.dto.request.BottomCategoryRequestDto;
 import com.sparta.andbackoffice.dto.response.ApiResponseDto;
 import com.sparta.andbackoffice.dto.response.BottomCategoryListResponseDto;
 import com.sparta.andbackoffice.dto.response.BottomCategoryResponseDto;
+import com.sparta.andbackoffice.entity.BottomCategory;
+import com.sparta.andbackoffice.entity.MiddleCategory;
+import com.sparta.andbackoffice.repository.BottomCategoryRepository;
+import com.sparta.andbackoffice.repository.MiddleCategoryRepository;
 import com.sparta.andbackoffice.service.BottomCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/admin")
 public class BottomCategoryController {
 
     private final BottomCategoryService bottomCategoryService;
@@ -25,12 +29,27 @@ public class BottomCategoryController {
     }
 
     //생성
+//    @PostMapping("/bottomcategory")
+//    public ResponseEntity<BottomCategoryResponseDto> createBottomCategory(@RequestBody BottomCategoryRequestDto bottomCategoryRequestDto) {
+//        BottomCategoryResponseDto createBottomCategory = bottomCategoryService.createBottomCategory(bottomCategoryRequestDto);
+//        return ResponseEntity.ok().body(createBottomCategory);
+//    }
     @PostMapping("/bottomcategory")
     public ResponseEntity<ApiResponseDto> createBottomCategory(@RequestBody BottomCategoryRequestDto bottomCategoryRequestDto) {
+//        Long middleCategoryId = bottomCategoryRequestDto.getMiddleCategoryId(); // 중위 카테고리 ID 가져오기
+//
+//        MiddleCategory middleCategory = middleCategoryRepository.findById(middleCategoryId)
+//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 중위 카테고리입니다."));
+//
+//        String categoryName = bottomCategoryRequestDto.getCategoryName();
+//        BottomCategory bottomCategory = new BottomCategory(categoryName);
+//        bottomCategory.setMiddleCategory(middleCategory); // 중위 카테고리와의 연관 관계 설정
+//        bottomCategoryRepository.save(bottomCategory);
+//
+//        BottomCategoryResponseDto responseDto = new BottomCategoryResponseDto(bottomCategory);
         bottomCategoryService.createBottomCategory(bottomCategoryRequestDto);
-        return ResponseEntity.ok().body(new ApiResponseDto("카테고리 생성완료", HttpStatus.OK.value()));
+        return ResponseEntity.ok().body(new ApiResponseDto("하위 카테고리 생성 완료", HttpStatus.OK.value()));
     }
-
     //수정
     @PutMapping("/bottomcategory/{id}")
     public ResponseEntity<BottomCategoryResponseDto> updateBottomCategory(@PathVariable Long id, @RequestBody BottomCategoryRequestDto bottomCategoryRequestDto) {
